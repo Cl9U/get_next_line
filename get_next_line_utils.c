@@ -6,11 +6,18 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:46:33 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/01 20:19:17 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/05 14:50:29 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*free_all(char *s1, char *s2)
+{
+	free(s1);
+	free(s2);
+	return (NULL);
+}
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
@@ -57,33 +64,6 @@ char	*ft_strchr(const char *s, int c)
 	if (s[i] == (char)c)
 		return ((char *)&s[i]);
 	return (NULL);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	size_t	nlen;
-	size_t	s1len;
-	size_t	s2len;
-	char	*str;
-
-	if (!s2)
-	{
-		free(s1);
-		return (NULL);
-	}
-	s1len = ft_strlen(s1);
-	s2len = ft_strlen(s2);
-	nlen = s1len + s2len;
-	str = malloc(nlen + 1);
-	if (!str)
-	{
-		free(s1);
-		return (NULL);
-	}
-	ft_memcpy(str, s1, s1len);
-	ft_memcpy(str + s1len, s2, s2len + 1);
-	free(s1);
-	return (str);
 }
 
 char	*ft_substr(char const *s, size_t start, size_t len)

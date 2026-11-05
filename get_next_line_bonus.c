@@ -6,39 +6,55 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:46:29 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/01 20:27:51 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/05 14:45:43 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*free_all(char *s1, char *s2)
+static char	*grow(char *leftover, size_t len, size_t *cap)
 {
-	free(s1);
-	free(s2);
-	return (NULL);
+	char	*new;
+	size_t	ncap;
+
+	if (*cap >= len + BUFFER_SIZE + 1)
+		return (leftover);
+	ncap = *cap * 2;
+	if (ncap < len + BUFFER_SIZE + 1)
+		ncap = len + BUFFER_SIZE + 1;
+	new = malloc(ncap);
+	if (!new)
+		return (free_all(leftover, NULL));
+	ft_memcpy(new, leftover, len);
+	new[len] = '\0';
+	free(leftover);
+	*cap = ncap;
+	return (new);
 }
 
 static char	*read_to_leftover(int fd, char *leftover)
 {
-	char	*buffer;
+	size_t	len;
+	size_t	cap;
 	ssize_t	bytes;
+	int		nl;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (free_all(NULL, leftover));
+	nl = (ft_strchr(leftover, '\n') != NULL);
+	len = ft_strlen(leftover);
+	cap = len + 1;
 	bytes = 1;
-	while (!ft_strchr(leftover, '\n') && bytes > 0)
+	while (bytes > 0 && !nl)
 	{
-		bytes = read(fd, buffer, BUFFER_SIZE);
-		if (bytes == -1)
-			return (free_all(buffer, leftover));
-		buffer[bytes] = '\0';
-		leftover = ft_strjoin(leftover, buffer);
+		leftover = grow(leftover, len, &cap);
 		if (!leftover)
-			return (free_all(buffer, NULL));
+			return (NULL);
+		bytes = read(fd, leftover + len, BUFFER_SIZE);
+		if (bytes == -1)
+			return (free_all(leftover, NULL));
+		leftover[len + bytes] = '\0';
+		nl = (ft_strchr(leftover + len, '\n') != NULL);
+		len += bytes;
 	}
-	free(buffer);
 	return (leftover);
 }
 
