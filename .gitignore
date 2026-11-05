@@ -73,3 +73,4 @@ program
 .vscomplete
 *.json
 main.c
+*.txt
