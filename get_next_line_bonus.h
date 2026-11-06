@@ -6,12 +6,14 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:44:16 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/05 15:51:50 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/05 21:04:42 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
+
+# define DELIM '\n'
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -19,7 +21,7 @@
 # include <stdio.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1337
+#  define BUFFER_SIZE 4096
 # endif
 
 char	*get_next_line(int fd);
