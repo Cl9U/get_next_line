@@ -6,23 +6,30 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:44:16 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/05 21:04:42 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/09 14:34:09 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
-# define DELIM '\n'
-
 # include <stdlib.h>
 # include <unistd.h>
-# include <fcntl.h>
-# include <stdio.h>
+
+# ifndef DELIM
+#  define DELIM '\n'
+# endif
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 4096
+#  define BUFFER_SIZE 42
 # endif
+
+typedef struct s_node
+{
+	int				fd;
+	char			*left;
+	struct s_node	*next;
+}	t_node;
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);

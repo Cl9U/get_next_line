@@ -6,7 +6,7 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:46:29 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/05 20:20:49 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/09 10:46:19 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	*fill_left(int fd, char *left)
 	char	*buffer;
 	ssize_t	bytes;
 
-	buffer = malloc(BUFFER_SIZE + 1);
+	buffer = malloc((size_t)BUFFER_SIZE + 1);
 	if (!buffer)
 		return (release(NULL, left));
 	bytes = 1;

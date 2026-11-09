@@ -6,7 +6,7 @@
 /*   By: sfaraji <sfaraji@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/30 16:46:29 by sfaraji           #+#    #+#             */
-/*   Updated: 2026/11/05 20:27:01 by sfaraji          ###   ########.fr       */
+/*   Updated: 2026/11/09 10:47:16 by sfaraji          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static char	*fill_left(int fd, char *left)
 	char	*buffer;
 	ssize_t	bytes;
 
-	buffer = malloc(BUFFER_SIZE + 1);
+	buffer = malloc((size_t)BUFFER_SIZE + 1);
 	if (!buffer)
 		return (release(NULL, left));
 	bytes = 1;
@@ -42,46 +42,76 @@ static char	*fill_left(int fd, char *left)
 	return (left);
 }
 
-static char	*get_line(char *left)
+static t_node	*get_node(t_node **head, int fd, int drop)
 {
-	size_t	len;
+	t_node	**cur;
+	t_node	*tmp;
 
-	if (left[0] == '\0')
+	cur = head;
+	while (*cur && (*cur)->fd != fd)
+		cur = &(*cur)->next;
+	if (drop)
+	{
+		if (!*cur)
+			return (NULL);
+		tmp = (*cur);
+		*cur = (*cur)->next;
+		free(tmp);
 		return (NULL);
-	len = 0;
-	while (left[len] && left[len] != DELIM)
-		len++;
-	if (left[len] == DELIM)
-		len++;
-	return (ft_substr(left, 0, len));
+	}
+	if (!*cur)
+	{
+		*cur = malloc(sizeof(t_node));
+		if (!*cur)
+			return (NULL);
+		(*cur)->fd = fd;
+		(*cur)->left = NULL;
+		(*cur)->next = NULL;
+	}
+	return (*cur);
 }
 
-static char	*trim_left(char *left)
+static char	*take_line(char **left)
 {
-	size_t	i;
+	size_t	len;
+	char	*line;
 	char	*rest;
 
-	i = 0;
-	while (left[i] && left[i] != DELIM)
-		i++;
-	if (left[i] != DELIM || left[i + 1] == '\0')
-		return (release(left, NULL));
-	rest = ft_substr(left, i + 1, ft_strlen(left));
-	free(left);
-	return (rest);
+	len = 0;
+	while ((*left)[len] && (*left)[len] != DELIM)
+		len++;
+	if ((*left)[len] == DELIM)
+		len++;
+	line = NULL;
+	rest = NULL;
+	if (len > 0)
+		line = ft_substr(*left, 0, len);
+	if (line && (*left)[len])
+		rest = ft_substr(*left, len, ft_strlen(*left));
+	free(*left);
+	*left = rest;
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*left[1024];
-	char		*line;
+	static t_node	*head;
+	t_node			*node;
+	char			*line;
 
-	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	left[fd] = fill_left(fd, left[fd]);
-	if (!left[fd])
+	node = get_node(&head, fd, 0);
+	if (!node)
 		return (NULL);
-	line = get_line(left[fd]);
-	left[fd] = trim_left(left[fd]);
+	node->left = fill_left(fd, node->left);
+	if (!node->left)
+	{
+		get_node(&head, fd, 1);
+		return (NULL);
+	}
+	line = take_line(&node->left);
+	if (!node->left)
+		get_node(&head, fd, 1);
 	return (line);
 }
