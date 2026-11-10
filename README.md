@@ -185,7 +185,6 @@ For each call:
 - ISO C standard (storage duration of objects, integer overflow): https://www.open-std.org/jtc1/sc22/wg14/
 - Valgrind manual (leak checking): https://valgrind.org/docs/manual/
 - AddressSanitizer documentation: https://clang.llvm.org/docs/AddressSanitizer.html
-- gnlTester, used to check the project: https://github.com/Tripouille/gnlTester
 - The 42 Norm and the project subject (get_next_line)
 
 ### Use of AI
