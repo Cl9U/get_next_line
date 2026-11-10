@@ -158,7 +158,7 @@ Each file descriptor has its own read position and its own leftover text, so the
 typedef struct s_node
 {
 	int		fd;
-	char	*left;
+	char		*left;
 	struct s_node	*next;
 }	t_node;
 
