@@ -6,6 +6,8 @@
 
 **get_next_line** is a C function that returns **one line at a time** from a file descriptor, so that repeated calls read a whole file (or the standard input) line by line.
 
+**Result:** this project was validated with a score of 125/125.
+
 ```c
 char *get_next_line(int fd);
 ```
